@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Get Key Tết 2026 - Pro Coder</title>
+    <style>
+        body { background: #1a1a1a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        /* Bảng Get Key hiện chính giữa - Không cần menu 3 gạch */
+        #get-key-panel { 
+            background: linear-gradient(145deg, #a00, #ff0000); 
+            padding: 40px; border: 4px solid #ffd700; border-radius: 20px; 
+            text-align: center; color: white; box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); 
+            z-index: 10; width: 90%; max-width: 400px; position: relative;
+        }
+
+        /* Bánh chưng mini */
+        .banh-chung { width: 70px; height: 70px; background: #2d5a27; margin: 0 auto 15px; position: relative; border: 2px solid #1e3d1a; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .lat { position: absolute; background: #f3e5ab; }
+        .h { width: 100%; height: 5px; top: 32px; } .v { width: 5px; height: 100%; left: 32px; }
+
+        #key-box { background: rgba(0,0,0,0.6); padding: 15px; font-size: 22px; color: #0f0; border: 1px dashed #ffd700; margin: 20px 0; font-family: 'Courier New', monospace; font-weight: bold; }
+        
+        button { background: #ffd700; color: #800; border: none; padding: 12px 35px; font-weight: bold; font-size: 18px; border-radius: 50px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 0 #b8860b; }
+        button:hover { transform: scale(1.05); background: #fff; box-shadow: 0 0 20px #ffd700; }
+        button:active { transform: translateY(4px); box-shadow: none; }
+
+        .flower { position: fixed; top: -10%; animation: fall linear forwards; pointer-events: none; z-index: 1; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="get-key-panel">
+        <div class="banh-chung"><div class="lat h"></div><div class="lat v"></div></div>
+        <h1 style="color: #ffd700; margin: 0; text-shadow: 2px 2px #000; font-size: 28px;">TẾT 2026 🧧</h1>
+        <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Hệ thống xác thực mã chuẩn IP</p>
+        
+        <div id="key-box">********</div>
+        
+        <button onclick="handleGetKey()">NHẬN KEY NGAY</button>
+        <p id="status" style="font-size: 13px; margin-top: 15px; color: #ffd700; font-weight: bold;"></p>
+    </div>
+
+    <script>
+        // CHỖ DÁN WEBHOOK DISCORD ĐỂ NHẬN THÔNG BÁO
+        const WEBHOOK_URL = "DÁN_LINK_WEBHOOK_CỦA_BẠN_VÀO_ĐÂY";
+
+        async function handleGetKey() {
+            const status = document.getElementById('status');
+            const keyBox = document.getElementById('key-box');
+            status.innerText = "⏳ Đang tính toán mã dựa trên IP...";
+
+            try {
+                // Lấy IP thật
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                const ip = data.ip;
+
+                // Thuật toán: (Số đầu IP * Ngày hiện tại * 2026) % 999999
+                const date = new Date().getDate();
+                const ipFirst = parseInt(ip.split('.')[0]);
+                const calc = (ipFirst * date * 2026) % 999999;
+                const magicKey = "TET-" + calc + "-" + ip.split('.')[3];
+
+                setTimeout(() => {
+                    keyBox.innerText = magicKey;
+                    status.innerText = "✅ Thành công! Hãy dán vào Tool.";
+                    
+                    // Gửi log về Discord Webhook
+                    if(WEBHOOK_URL.startsWith("https://discord.com")) {
+                        fetch(WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                embeds: [{
+                                    title: "🚀 Người dùng vừa lấy Key",
+                                    color: 16711680,
+                                    fields: [
+                                        { name: "IP Address", value: `\`${ip}\``, inline: true },
+                                        { name: "Generated Key", value: `\`${magicKey}\``, inline: true }
+                                    ],
+                                    footer: { text: "Hệ thống Get Key Tết 2026" },
+                                    timestamp: new Date()
+                                }]
+                            })
+                        });
+                    }
+                }, 1000);
+            } catch (e) { status.innerText = "❌ Lỗi kết nối! Hãy thử lại."; }
+        }
+
+        // Hiệu ứng hoa đào mai rơi rước lộc
+        setInterval(() => {
+            const icons = ['🌼', '🌸', '🧧', '💰', '🧨'];
+            const f = document.createElement('div');
+            f.className = 'flower';
+            f.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.fontSize = Math.random() * 20 + 20 + 'px';
+            f.style.animationDuration = Math.random() * 3 + 2 + 's';
+            f.style.opacity = Math.random();
+            document.body.appendChild(f);
+            setTimeout(() => f.remove(), 5000);
+        }, 400);
+    </script>
+</body>
+</html>
