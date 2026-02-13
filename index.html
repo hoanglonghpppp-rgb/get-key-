@@ -3,106 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Get Key Tết 2026 - Pro Coder</title>
+    <title>Hệ Thống Get Key Tết 2026 - AI Edition</title>
     <style>
-        body { background: #1a1a1a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        
-        /* Bảng Get Key hiện chính giữa - Không cần menu 3 gạch */
-        #get-key-panel { 
-            background: linear-gradient(145deg, #a00, #ff0000); 
-            padding: 40px; border: 4px solid #ffd700; border-radius: 20px; 
-            text-align: center; color: white; box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); 
-            z-index: 10; width: 90%; max-width: 400px; position: relative;
+        /* Hiệu ứng nền Anime huyền ảo full màn hình */
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0b0b1a; /* Màu nền tối sâu thẳm */
         }
 
-        /* Bánh chưng mini */
-        .banh-chung { width: 70px; height: 70px; background: #2d5a27; margin: 0 auto 15px; position: relative; border: 2px solid #1e3d1a; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .lat { position: absolute; background: #f3e5ab; }
-        .h { width: 100%; height: 5px; top: 32px; } .v { width: 5px; height: 100%; left: 32px; }
+        /* Lớp phủ Gradient chuyển động cực mượt */
+        .anime-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            z-index: -2;
+        }
 
-        #key-box { background: rgba(0,0,0,0.6); padding: 15px; font-size: 22px; color: #0f0; border: 1px dashed #ffd700; margin: 20px 0; font-family: 'Courier New', monospace; font-weight: bold; }
+        /* Container chính full màn hình */
+        .full-screen-container {
+            display: flex; justify-content: center; align-items: center;
+            width: 100vw; height: 100vh; position: relative;
+        }
+
+        /* Bảng Get Key phong cách Cyberpunk-Anime */
+        #get-key-panel { 
+            background: rgba(255, 0, 0, 0.15); 
+            backdrop-filter: blur(15px); /* Hiệu ứng kính mờ Anime */
+            padding: 60px; border: 2px solid #ffd700; border-radius: 30px; 
+            text-align: center; color: white; 
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 0, 0, 0.2);
+            z-index: 10; width: 85%; max-width: 500px;
+            animation: float 4s ease-in-out infinite; /* Hiệu ứng bay bổng */
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Bánh chưng phát sáng hạt lấp lánh */
+        .banh-chung-ai {
+            font-size: 80px; margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px #00ff00);
+        }
+
+        #key-box { 
+            background: rgba(0,0,0,0.8); padding: 20px; font-size: 28px; 
+            color: #00ffcc; border: 2px solid #00ffcc; border-radius: 10px;
+            margin: 30px 0; font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px #00ffcc;
+        }
         
-        button { background: #ffd700; color: #800; border: none; padding: 12px 35px; font-weight: bold; font-size: 18px; border-radius: 50px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 0 #b8860b; }
-        button:hover { transform: scale(1.05); background: #fff; box-shadow: 0 0 20px #ffd700; }
-        button:active { transform: translateY(4px); box-shadow: none; }
+        button { 
+            background: linear-gradient(90deg, #ffd700, #ff8c00); 
+            color: #000; border: none; padding: 15px 45px; 
+            font-weight: bold; font-size: 22px; border-radius: 50px; 
+            cursor: pointer; transition: 0.5s;
+            box-shadow: 0 0 30px #ffd700;
+        }
+        button:hover { transform: scale(1.1) rotate(2deg); box-shadow: 0 0 50px #fff; }
 
-        .flower { position: fixed; top: -10%; animation: fall linear forwards; pointer-events: none; z-index: 1; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        /* Hạt ánh sáng Anime rơi */
+        .particle {
+            position: fixed; background: white; border-radius: 50%;
+            pointer-events: none; opacity: 0.5; z-index: -1;
+            animation: fall linear infinite;
+        }
+        @keyframes fall { to { transform: translateY(105vh); } }
     </style>
 </head>
 <body>
-    <div id="get-key-panel">
-        <div class="banh-chung"><div class="lat h"></div><div class="lat v"></div></div>
-        <h1 style="color: #ffd700; margin: 0; text-shadow: 2px 2px #000; font-size: 28px;">TẾT 2026 🧧</h1>
-        <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Hệ thống xác thực mã chuẩn IP</p>
-        
-        <div id="key-box">********</div>
-        
-        <button onclick="handleGetKey()">NHẬN KEY NGAY</button>
-        <p id="status" style="font-size: 13px; margin-top: 15px; color: #ffd700; font-weight: bold;"></p>
+    <div class="anime-bg"></div>
+    <div class="full-screen-container">
+        <div id="get-key-panel">
+            <div class="banh-chung-ai">🧧</div>
+            <h1 style="color: #ffd700; font-size: 40px; margin: 0; text-shadow: 0 0 20px #ff0000;">AI GET KEY</h1>
+            <p style="color: #00ffcc; letter-spacing: 2px;">SYSTEM 2026 - VERSION PRO</p>
+            
+            <div id="key-box">READY...</div>
+            
+            <button onclick="handleGetKey()">ACTIVATE KEY</button>
+            <p id="status" style="margin-top: 20px; font-weight: bold; color: #ffd700;"></p>
+        </div>
     </div>
 
     <script>
-        // CHỖ DÁN WEBHOOK DISCORD ĐỂ NHẬN THÔNG BÁO
-        const WEBHOOK_URL = "DÁN_LINK_WEBHOOK_CỦA_BẠN_VÀO_ĐÂY";
-
         async function handleGetKey() {
             const status = document.getElementById('status');
             const keyBox = document.getElementById('key-box');
-            status.innerText = "⏳ Đang tính toán mã dựa trên IP...";
+            status.innerText = "SYTEM SCANNING IP...";
 
             try {
-                // Lấy IP thật
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 const ip = data.ip;
-
-                // Thuật toán: (Số đầu IP * Ngày hiện tại * 2026) % 999999
-                const date = new Date().getDate();
-                const ipFirst = parseInt(ip.split('.')[0]);
-                const calc = (ipFirst * date * 2026) % 999999;
-                const magicKey = "TET-" + calc + "-" + ip.split('.')[3];
+                const magicKey = "AI-TET-" + Math.floor(Math.random() * 999999);
 
                 setTimeout(() => {
                     keyBox.innerText = magicKey;
-                    status.innerText = "✅ Thành công! Hãy dán vào Tool.";
-                    
-                    // Gửi log về Discord Webhook
-                    if(WEBHOOK_URL.startsWith("https://discord.com")) {
-                        fetch(WEBHOOK_URL, {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                embeds: [{
-                                    title: "🚀 Người dùng vừa lấy Key",
-                                    color: 16711680,
-                                    fields: [
-                                        { name: "IP Address", value: `\`${ip}\``, inline: true },
-                                        { name: "Generated Key", value: `\`${magicKey}\``, inline: true }
-                                    ],
-                                    footer: { text: "Hệ thống Get Key Tết 2026" },
-                                    timestamp: new Date()
-                                }]
-                            })
-                        });
-                    }
+                    status.innerText = "XÁC THỰC THÀNH CÔNG!";
                 }, 1000);
-            } catch (e) { status.innerText = "❌ Lỗi kết nối! Hãy thử lại."; }
+            } catch (e) { status.innerText = "ERROR CONNECTION!"; }
         }
 
-        // Hiệu ứng hoa đào mai rơi rước lộc
-        setInterval(() => {
-            const icons = ['🌼', '🌸', '🧧', '💰', '🧨'];
-            const f = document.createElement('div');
-            f.className = 'flower';
-            f.innerHTML = icons[Math.floor(Math.random()*icons.length)];
-            f.style.left = Math.random() * 100 + 'vw';
-            f.style.fontSize = Math.random() * 20 + 20 + 'px';
-            f.style.animationDuration = Math.random() * 3 + 2 + 's';
-            f.style.opacity = Math.random();
-            document.body.appendChild(f);
-            setTimeout(() => f.remove(), 5000);
-        }, 400);
+        // Tạo 100 hạt ánh sáng Anime rơi lung linh
+        for(let i=0; i<100; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 4 + 'px';
+            p.style.width = size; p.style.height = size;
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = -Math.random() * 100 + 'vh';
+            p.style.animationDuration = Math.random() * 5 + 3 + 's';
+            p.style.opacity = Math.random();
+            document.body.appendChild(p);
+        }
     </script>
 </body>
 </html>
